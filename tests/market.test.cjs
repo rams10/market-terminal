@@ -3,12 +3,12 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 
 const html = fs.readFileSync("index.html", "utf8");
-const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(x => x[1]);
+const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(x => x[1]);
 assert.ok(scripts.length, "index.html precisa conter script");
 for (const source of scripts) new Function(source);
 
 assert.match(html, /id="ma1on" type="checkbox" checked/, "EMA 9 deve iniciar ativada");
-assert.match(html, /id="ma1tf"[\\s\\S]*?<option value="chart" selected>/, "EMA 9 deve iniciar no timeframe do gráfico");
+assert.match(html, /id="ma1tf"[\s\S]*?<option value="chart" selected>/, "EMA 9 deve iniciar no timeframe do gráfico");
 assert.match(html, /if\\(period==="1W"\\)\\{let weekly=await fetchB3Raw\\("1wk","10y"\\)/, "gráfico semanal deve pedir candles semanais nativos");
 assert.match(html, /if\\(tf==="1W"\\)return fetchB3Raw\\("1wk","10y"\\)/, "média semanal deve usar a mesma granularidade semanal");
 assert.match(html, /let key="data-v3:"/, "cache deve invalidar dados da versão anterior");
@@ -43,7 +43,8 @@ assert.equal(Math.round((weekly[1].time - weekly[0].time) / 86400), 7);
 
 ctx.bars = weekly;
 ctx.period = "1W";
-const projected = vm.runInContext('projectAverage(weekly, 2, "EMA", "1W")', vm.createContext({ ...ctx, weekly }));
+ctx.weekly = weekly;
+const projected = vm.runInContext('projectAverage(weekly, 2, "EMA", "1W")', ctx);
 assert.equal(projected.length, weekly.length - 1, "EMA 2 deve ter pontos nos candles semanais a partir do segundo");
 assert.equal(projected.at(-1).time, weekly.at(-1).time, "EMA semanal deve alinhar com o candle semanal correspondente");
 
