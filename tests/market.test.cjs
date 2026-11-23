@@ -9,8 +9,8 @@ for (const source of scripts) new Function(source);
 
 assert.match(html, /id="ma1on" type="checkbox" checked/, "EMA 9 deve iniciar ativada");
 assert.match(html, /id="ma1tf"[\s\S]*?<option value="chart" selected>/, "EMA 9 deve iniciar no timeframe do gráfico");
-assert.match(html, /if\\(period==="1W"\\)\\{let weekly=await fetchB3Raw\\("1wk","10y"\\)/, "gráfico semanal deve pedir candles semanais nativos");
-assert.match(html, /if\\(tf==="1W"\\)return fetchB3Raw\\("1wk","10y"\\)/, "média semanal deve usar a mesma granularidade semanal");
+assert.ok(html.includes('if(period==="1W"){let weekly=await fetchB3Raw("1wk","10y")'), "gráfico semanal deve pedir candles semanais nativos");
+assert.ok(html.includes('if(tf==="1W")return fetchB3Raw("1wk","10y")'), "média semanal deve usar a mesma granularidade semanal");
 assert.match(html, /let key="data-v3:"/, "cache deve invalidar dados da versão anterior");
 
 function section(start, end) {
