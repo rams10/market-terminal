@@ -15,7 +15,10 @@ assert.match(html, /let key="data-v4:"/, "cache deve invalidar dados da versão 
 assert.ok(html.includes('const seed=[["BTC","Bitcoin"],["ETH","Ethereum"]]'), "cripto deve conter somente BTC e ETH");
 assert.ok(html.includes('"PSSA3","AXIA3","BBSE3","ITSA4","ABCB4","BBDC4","CPFE3","SBSP3","ISAE4","ALOS3","EGIE3","ALUP4","SAPR4","KLBN4","PETR4","VALE3"'), "ações devem limitar-se à carteira informada");
 assert.ok(!html.includes("api.coingecko.com"), "não deve pesquisar universo externo de criptomoedas");
-assert.ok(!html.includes('id="fii"') && !html.includes('id="etf"'), "abas de FIIs e ETFs devem ser removidas");
+assert.ok(html.includes('id="fii"') && html.includes('id="etf"'), "abas de FIIs e ETFs devem permanecer disponíveis");
+assert.ok(html.includes('const fiis=[["HGLG11","Patria Logística"],["BTLG11","BTG Pactual Logística"],["GGRC11","GGR Covepi Renda"],["XPML11","XP Malls"],["PMLL11","Patria Malls"],["KNUQ11","Kinea Unique HY CDI"],["MXRF11","Maxi Renda"]]'), "lista original de FIIs deve ser preservada");
+assert.ok(html.includes('const etfs=[["XBCI11","ETF de crédito privado"],["LFTB11","ETF Tesouro Selic"],["FIXX11","ETF de renda fixa"],["GPUS11","ETF de ações globais"],["SPYI11","ETF S&P 500"],["MUND11","ETF global"],["GDIV11","ETF de dividendos"],["QQQI11","ETF Nasdaq 100 Income"],["TECK11","ETF tecnologia"]]'), "lista original de ETFs deve ser preservada");
+assert.ok(html.includes('if(!["b3","fii","etf","crypto"].includes(which))return'), "seletor deve reconhecer as quatro categorias");
 assert.ok(html.includes("localStorage.setItem(key"), "cache persistente deve reduzir consultas repetidas");
 
 function section(start, end) {
