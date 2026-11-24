@@ -11,7 +11,12 @@ assert.match(html, /id="ma1on" type="checkbox" checked/, "EMA 9 deve iniciar ati
 assert.match(html, /id="ma1tf"[\s\S]*?<option value="chart" selected>/, "EMA 9 deve iniciar no timeframe do gráfico");
 assert.ok(html.includes('if(period==="1W"){let weekly=await fetchB3Raw("1wk","10y")'), "gráfico semanal deve pedir candles semanais nativos");
 assert.ok(html.includes('if(tf==="1W")return fetchB3Raw("1wk","10y")'), "média semanal deve usar a mesma granularidade semanal");
-assert.match(html, /let key="data-v3:"/, "cache deve invalidar dados da versão anterior");
+assert.match(html, /let key="data-v4:"/, "cache deve invalidar dados da versão anterior");
+assert.ok(html.includes('const seed=[["BTC","Bitcoin"],["ETH","Ethereum"]]'), "cripto deve conter somente BTC e ETH");
+assert.ok(html.includes('"PSSA3","AXIA3","BBSE3","ITSA4","ABCB4","BBDC4","CPFE3","SBSP3","ISAE4","ALOS3","EGIE3","ALUP4","SAPR4","KLBN4","PETR4","VALE3"'), "ações devem limitar-se à carteira informada");
+assert.ok(!html.includes("api.coingecko.com"), "não deve pesquisar universo externo de criptomoedas");
+assert.ok(!html.includes('id="fii"') && !html.includes('id="etf"'), "abas de FIIs e ETFs devem ser removidas");
+assert.ok(html.includes("localStorage.setItem(key"), "cache persistente deve reduzir consultas repetidas");
 
 function section(start, end) {
   const a = html.indexOf(start);
